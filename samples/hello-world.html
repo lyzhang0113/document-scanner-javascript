@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dynamsoft Document Scanner - Hello World</title>
+    <script src="../dist/dds.bundle.js"></script>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1 style="font-size: large">Dynamsoft Document Scanner</h1>
+    <div id="results"></div>
+
+    <script>
+      const resultContainer = document.querySelector("#results");
+
+      // Initialize the Dynamsoft Document Scanner
+      const documentScanner = new Dynamsoft.DocumentScanner({
+        license: "YOUR_LICENSE_KEY_HERE",
+      });
+      (async () => {
+        // Launch the scanner and wait for the result
+        const result = await documentScanner.launch();
+        console.log(result);
+
+        // Clear the result container and display the scanned result as a canvas
+        if (result?.correctedImageResult) {
+          resultContainer.innerHTML = ""; // Clear placeholder content
+          const canvas = result.correctedImageResult.toCanvas();
+          resultContainer.appendChild(canvas);
+        } else {
+          resultContainer.innerHTML = "<p>No image scanned. Please try again.</p>";
+        }
+      })();
+    </script>
+  </body>
+</html>
