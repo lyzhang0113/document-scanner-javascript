@@ -32,10 +32,17 @@ app.use(
 
 // Serve static files
 app.use("/dist", express.static(distPath));
+app.use("/assets", express.static(path.join(__dirname, "../samples/assets")));
+app.use("/css", express.static(path.join(__dirname, "../samples/css")));
+app.use("/font", express.static(path.join(__dirname, "../samples/font")));
 
 // Routes
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../samples/hello-world.html"));
+  res.sendFile(path.join(__dirname, "../samples/demo.html"));
+});
+
+app.get("/demo", (req, res) => {
+  res.sendFile(path.join(__dirname, "../samples/demo.html"));
 });
 
 app.get("/hello-world", (req, res) => {
@@ -122,6 +129,7 @@ httpsServer.listen(httpsPort, "0.0.0.0", () => {
   });
   console.log("\x1b[36m Available Pages:\x1b[0m");
   console.log("\x1b[90m-------------------\x1b[0m");
+  console.log("\x1b[33m Demo:\x1b[0m        /demo");
   console.log("\x1b[33m Hello World:\x1b[0m  /hello-world\n");
 
   console.log("\x1b[90mPress Ctrl+C to stop the server\x1b[0m\n");
