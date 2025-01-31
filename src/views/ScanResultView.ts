@@ -5,10 +5,12 @@ import { createControls, shouldCorrectImage } from "./utils";
 import DocumentCorrectionView from "./DocumentCorrectionView";
 import { DDS_ICONS } from "./utils/icons";
 import { ControlButton, DocumentScanResult, EnumResultStatus } from "./utils/types";
+import { ImageFilterHandler, BlackwhiteFilter, InvertFilter, GrayscaleFilter, SepiaFilter } from 'image-filter-js';
 
 export interface ScanResultViewControlIcons {
   uploadBtn?: Pick<ControlButton, "icon" | "text">;
   correctImageBtn?: Pick<ControlButton, "icon" | "text">;
+  filterBtn?: Pick<ControlButton, "icon" | "text">;
   retakeBtn?: Pick<ControlButton, "icon" | "text">;
   doneBtn?: Pick<ControlButton, "icon" | "text">;
   containerStyle?: Partial<CSSStyleDeclaration>;
@@ -205,6 +207,29 @@ export default class ScanResultView {
     }
   }
 
+  private async handleFilter() {
+    try {
+      const { result } = this.resources;
+      let imageResult = result.correctedImageResult as NormalizedImageResultItem;
+      let cvs = document.querySelector('canvas');
+      let filter = new BlackwhiteFilter(cvs, 127, true);
+      filter.process(imageResult.toCanvas());
+
+    } catch (error) {
+      console.error("ScanResultView - Handle Filter Error:", error);
+      // Make sure to resolve with error if something goes wrong
+      if (this.currentScanResultViewResolver) {
+        this.currentScanResultViewResolver({
+          status: {
+            code: EnumResultStatus.RS_FAILED,
+            message: error?.message || error,
+          },
+        });
+      }
+      throw error;
+    }
+  }
+
   private async handleDone() {
     try {
       if (this.config?.onDone) {
@@ -255,6 +280,11 @@ export default class ScanResultView {
         text: controlIcons?.correctImageBtn?.text || "Correction",
         onClick: () => this.handleCorrectImage(),
         disabled: !this.correctionView,
+      },
+      {
+        icon: controlIcons?.filterBtn?.icon || DDS_ICONS.filter,
+        text: controlIcons?.filterBtn?.text || "Filter",
+        onClick: () => this.handleFilter(),
       },
       {
         icon: controlIcons?.retakeBtn?.icon || DDS_ICONS.retake,

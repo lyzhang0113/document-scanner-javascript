@@ -54,6 +54,7 @@ const external = [
   "dynamsoft-camera-enhancer",
   "dynamsoft-document-normalizer",
   "dynamsoft-utility",
+  "image-filter-js",
 ];
 
 const globals = {
@@ -63,6 +64,7 @@ const globals = {
   "dynamsoft-camera-enhancer": "Dynamsoft.DCE",
   "dynamsoft-document-normalizer": "Dynamsoft.DDN",
   "dynamsoft-utility": "Dynamsoft.Utility",
+  'image-filter-js': 'imageFilterJs',
 };
 
 export default [
